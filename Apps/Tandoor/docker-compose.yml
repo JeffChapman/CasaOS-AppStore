@@ -1,0 +1,122 @@
+name: tandoor
+services:
+  tandoor:
+    cpu_shares: 90
+    command: []
+    container_name: tandoor
+    depends_on:
+      tandoor-db:
+        condition: service_healthy
+        required: true
+    deploy:
+      resources:
+        limits:
+          memory: 15769M
+    environment:
+      - DB_ENGINE=django.db.backends.postgresql
+      - POSTGRES_DB=tandoordb
+      - POSTGRES_HOST=tandoor-db
+      - POSTGRES_PASSWORD=100c7d31-9ec5-44ec-9101-e226c8e2420d
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=tandoor
+      - SECRET_KEY=6496f725-e4a4-4fa5-9f7b-db0114bc1568
+    hostname: tandoor
+    image: vabene1111/recipes:latest
+    labels:
+      icon: https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg
+    ports:
+      - target: 8080
+        published: "8080"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/tandoor/staticfiles
+        target: /opt/recipes/staticfiles
+      - type: bind
+        source: /DATA/Media
+        target: /opt/recipes/mediafiles
+    x-casaos:
+      ports:
+        - container: "8080"
+          description:
+            en_us: "Container Port: 8080"
+      volumes:
+        - container: /opt/recipes/staticfiles
+          description:
+            en_us: "Container Path: /opt/recipes/staticfiles"
+        - container: /opt/recipes/mediafiles
+          description:
+            en_us: "Container Path: /opt/recipes/mediafiles"
+    devices: []
+    cap_add: []
+    networks:
+      - tandoor_network
+    privileged: false
+  tandoor-db:
+    cpu_shares: 90
+    command: []
+    container_name: tandoor-db
+    deploy:
+      resources:
+        limits:
+          memory: 15769M
+    environment:
+      - POSTGRES_DB=tandoordb
+      - POSTGRES_PASSWORD=100c7d31-9ec5-44ec-9101-e226c8e2420d
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=tandoor
+    hostname: tandoor-db
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready
+        - -d
+        - tandoor
+      timeout: 5s
+      interval: 10s
+      retries: 5
+      start_period: 30s
+    image: postgres:15-alpine
+    labels:
+      icon: https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/tandoor/postgresql
+        target: /var/lib/postgresql/data
+    ports: []
+    devices: []
+    cap_add: []
+    networks:
+      - tandoor_network
+    privileged: false
+networks:
+  tandoor_network:
+    name: tandoor_tandoor_network
+    driver: bridge
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  author: BigBearTechWorld
+  category: Mine
+  description:
+    en_us: Drop your collection of links and notes. Get Tandoor and never look back
+      onto a time without recipe management, storage, sharing and collaborative
+      cooking!
+  developer: tandoorrecipes
+  hostname: ""
+  icon: https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/docs/logo_color.svg
+  index: /
+  is_uncontrolled: false
+  main: tandoor
+  port_map: "8080"
+  scheme: http
+  store_app_id: tandoor
+  tagline:
+    en_us: Recipe collection manager.
+  thumbnail: ""
+  title:
+    custom: ""
+    en_us: Tandoor
