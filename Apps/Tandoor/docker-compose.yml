@@ -16,10 +16,10 @@ services:
       - DB_ENGINE=django.db.backends.postgresql
       - POSTGRES_DB=tandoordb
       - POSTGRES_HOST=tandoor-db
-      - POSTGRES_PASSWORD=100c7d31-9ec5-44ec-9101-e226c8e2420d
+      - POSTGRES_PASSWORD=<p1>
       - POSTGRES_PORT=5432
       - POSTGRES_USER=tandoor
-      - SECRET_KEY=6496f725-e4a4-4fa5-9f7b-db0114bc1568
+      - SECRET_KEY=<p2>
     hostname: tandoor
     image: vabene1111/recipes:latest
     labels:
@@ -63,7 +63,7 @@ services:
           memory: 15769M
     environment:
       - POSTGRES_DB=tandoordb
-      - POSTGRES_PASSWORD=100c7d31-9ec5-44ec-9101-e226c8e2420d
+      - POSTGRES_PASSWORD=<p1>
       - POSTGRES_PORT=5432
       - POSTGRES_USER=tandoor
     hostname: tandoor-db
